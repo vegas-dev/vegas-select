@@ -1,0 +1,8 @@
+.form-floating [data-vg-toggle="show-pass"] {
+	position: absolute;
+	right: 12px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 24px;
+	height: 24px;
+}

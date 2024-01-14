@@ -37,18 +37,18 @@ class VGSelect {
 			select.classList.add(_class)
 		}
 
-		//
+		// Создаем элемент с отображением выбранного варианта
 		let current = document.createElement('div');
 		current.classList.add(this.classes.current);
 		current.innerText = option_selected;
 		select.append(current);
 
-		//
+		// Создаем элемент выпадающего списка
 		let dropdown = document.createElement('div');
 		dropdown.classList.add(this.classes.dropdown);
 		select.append(dropdown);
 
-		//
+		// Создаем список и варианты селекта
 		let list = document.createElement('ul');
 		list.classList.add(this.classes.list);
 
@@ -69,7 +69,7 @@ class VGSelect {
 
 		dropdown.append(list);
 
-		//
+		// Добавляем все созданный контейнер после селекта
 		element.insertAdjacentElement('afterend', select);
 
 		this.toggle();
@@ -113,6 +113,10 @@ class VGSelect {
 				}
 
 				el.classList.add('selected');
+
+				container.querySelector('.' + _this.classes.current).innerText = el.innerText;
+
+				container.classList.remove('show');
 			}
 		});
 

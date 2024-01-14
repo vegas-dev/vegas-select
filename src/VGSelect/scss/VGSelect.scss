@@ -38,7 +38,7 @@ select {
 	}
 
 	&.show {
-		.vg-select-list {
+		.vg-select-dropdown {
 			transform: scale(1) translateY(0);
 			opacity: 1;
 			box-sizing: border-box;

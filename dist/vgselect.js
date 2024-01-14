@@ -67,6 +67,7 @@
 		constructor(element, arg = {}) {
 			this.classes = {
 				'container': 'vg-select',
+				'dropdown': 'vg-select-dropdown',
 				'list': 'vg-select-list',
 				'option': 'vg-select-list--option',
 				'current': 'vg-select-current'
@@ -89,6 +90,7 @@
 			let option_selected = element.options[element.selectedIndex].innerText,
 				options = element.options;
 
+			// Создаем основной элемент с классами селекта
 			let classes = element.getAttribute('class'),
 				select = document.createElement('div');
 
@@ -98,11 +100,18 @@
 				select.classList.add(_class);
 			}
 
-			let div = document.createElement('div');
-			div.classList.add(this.classes.current);
-			div.innerText = option_selected;
-			select.append(div);
+			//
+			let current = document.createElement('div');
+			current.classList.add(this.classes.current);
+			current.innerText = option_selected;
+			select.append(current);
 
+			//
+			let dropdown = document.createElement('div');
+			dropdown.classList.add(this.classes.dropdown);
+			select.append(dropdown);
+
+			//
 			let list = document.createElement('ul');
 			list.classList.add(this.classes.list);
 
@@ -121,28 +130,33 @@
 				i++;
 			}
 
-			select.append(list);
+			dropdown.append(list);
 
+			//
 			element.insertAdjacentElement('afterend', select);
 
-			this.toggle(select);
+			this.toggle();
 		}
 
-		toggle(select) {
+		toggle() {
 			const _this = this;
 
-			vg$1.listener('click', '.' + this.classes.container, function (el, e) {
+			vg$1.listener('click', '.' + _this.classes.current, function (el, e) {
+				let element = el.closest('.vg-select');
+
 				let selects = document.querySelectorAll('.vg-select');
 				if (selects.length) {
 					for (const els of selects) {
-						els.classList.remove('show');
+						if (els !== element) {
+							els.classList.remove('show');
+						}
 					}
 				}
 
-				if (el.classList.contains('show')) {
-					el.classList.remove('show');
+				if (element.classList.contains('show')) {
+					element.classList.remove('show');
 				} else {
-					el.classList.add('show');
+					element.classList.add('show');
 				}
 
 				e.preventDefault();
@@ -151,7 +165,18 @@
 			vg$1.listener('click', '.' + _this.classes.option, function (el, e) {
 				e.preventDefault();
 
+				if (!el.classList.contains('disabled')) {
+					let container = el.closest('.' + _this.classes.container),
+						options = container.querySelectorAll('.' + _this.classes.option);
 
+					if (options.length) {
+						for (const option of options) {
+							option.classList.remove('selected');
+						}
+					}
+
+					el.classList.add('selected');
+				}
 			});
 
 			vg$1.listener('mouseup', '', function (e) {

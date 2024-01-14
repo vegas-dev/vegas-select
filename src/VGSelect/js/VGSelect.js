@@ -152,6 +152,8 @@ class VGSelect {
 
 	search() {
 		const _this = this;
+
+		console.log(_this.settings.search);
 	}
 }
 

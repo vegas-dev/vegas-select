@@ -6,3 +6,9 @@
 	width: 24px;
 	height: 24px;
 }
+
+.vg-select {
+	--vg-select-background-color: var(--bs-body-bg);
+	--vg-select-border-color: var(--bs-border-color);
+	--vg-select-color: var(--bs-body-color);
+}

@@ -10,8 +10,8 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 	<!-- VGFormSender -->
-	<link href="/demo/css/style.css" rel="stylesheet">
 	<link href="/dist/vgselect.css" rel="stylesheet">
+	<link href="/demo/css/style.css" rel="stylesheet">
 </head>
 <body>
 <div class="wrapper">
@@ -38,7 +38,7 @@
 						<option value="2">Узбекистан</option>
 						<option value="3">Казахстан</option>
 						<option value="4">Белоруссия</option>
-						<option value="5">Китай</option>
+						<option value="5" disabled>Китай</option>
 					</select>
 				</div>
 				<div class="col">
@@ -70,10 +70,13 @@
 <script src="/demo/js/script.js"></script>
 <script src="/dist/vgselect.min.js"></script>
 <script>
-	let elements = document.querySelectorAll('.vg-select');
-	for (const element of elements) {
-		new VGSelect(element, {})
-	}
+	document.addEventListener('DOMContentLoaded', function () {
+		let elements = document.querySelectorAll('.vg-select');
+
+		for (const element of elements) {
+			new VGSelect(element, {})
+		}
+	});
 </script>
 </body>
 </html>

@@ -1,0 +1,26 @@
+$prefix: 'vg-select';
+
+$select-current-map: (
+	background-color: white,
+	color: black,
+	border-width: 1px,
+	border-style: solid,
+	border-color: #f5f5f5,
+	border-radius: 5px,
+	padding-left: 16px,
+	padding-right: 32px,
+	padding-top: 16px,
+	padding-bottom: 16px,
+	line-height: 1.1,
+	font-size: 16px,
+	position: relative,
+	box-sizing: border-box,
+	cursor: pointer,
+	outline: none
+) !default;
+
+@mixin mix-vars($properties) {
+	@each $key, $value in $properties {
+		--#{$prefix}-#{$key}: #{$value}
+	}
+}

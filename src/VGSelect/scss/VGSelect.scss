@@ -1,5 +1,45 @@
-.vg-select {
-	select {
+@import "variables";
+
+select {
+	&.vg-select {
 		display: none;
+	}
+}
+
+.vg-select {
+	@include mix-vars($select-current-map);
+	position: relative;
+
+	&-current {
+		@each $key, $value in $select-current-map {
+			#{$key}: var(--vg-select-#{$key})
+		}
+	}
+
+	&-list {
+		position: absolute;
+		background-color: #fff;
+		border-radius: 5px;
+		box-shadow: 0 0 0 1px rgba(68, 68, 68, 0.11);
+		box-sizing: border-box;
+		margin-top: 4px;
+		opacity: 0;
+		overflow: hidden;
+		padding: 0;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		transform-origin: 50% 0;
+		transform: scale(0.75) translateY(-21px);
+		transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
+		z-index: 9;
+	}
+
+	&.show {
+		.vg-select-list {
+			transform: scale(1) translateY(0);
+			opacity: 1;
+			box-sizing: border-box;
+		}
 	}
 }

@@ -40,28 +40,37 @@
 			}
 		}
 
-	/*	find(el, found) {
-			let found_elements = [];
+		merge(...objects) {
+			const _this = this;
 
-			// Find all the outer matched elements
-			var outers = document.querySelectorAll('.post');
+			const isObject = obj => obj && typeof obj === 'object';
 
-			for(var i=0; i<outers.length; i++) {
-				var elements_in_outer = outers[i].querySelectorAll(".thumb");
+			return objects.reduce((prev, obj) => {
+				Object.keys(obj).forEach(key => {
+					const pVal = prev[key];
+					const oVal = obj[key];
 
-				// document.querySelectorAll() returns an "array-like" collection of elements
-				// convert this "array-like" collection to an array
-				elements_in_outer = Array.prototype.slice.call(elements_in_outer);
+					if (Array.isArray(pVal) && Array.isArray(oVal)) {
+						prev[key] = pVal.concat(...oVal);
+					}
+					else if (isObject(pVal) && isObject(oVal)) {
+						prev[key] = _this.merge(pVal, oVal);
+					}
+					else {
+						prev[key] = oVal;
+					}
+				});
 
-				found_elements = found_elements.concat(elements_in_outer);
-			}
-
-	// The final 4 elements
-			console.log(found_elements);
-		}*/
+				return prev;
+			}, {});
+		}
 	}
 
 	var vg$1 = new vg;
+
+	const setParams = function (element, params, arg) {
+		return vg$1.merge(params, arg)
+	};
 
 	class VGSelect {
 		constructor(element, arg = {}) {
@@ -73,6 +82,10 @@
 				'current': 'vg-select-current'
 			};
 
+			const defaultParams = {
+				'search': false
+			};
+
 			if (!element) {
 				console.error('Первый параметр не должен быть пустым');
 				return false;
@@ -81,6 +94,7 @@
 					console.error('Тэг должен быть "select"');
 					return false;
 				} else {
+					this.settings = setParams(element, defaultParams, arg);
 					this.create(element);
 				}
 			}
@@ -135,6 +149,10 @@
 			// Добавляем все созданный контейнер после селекта
 			element.insertAdjacentElement('afterend', select);
 
+			if (this.settings.search) {
+				this.search();
+			}
+
 			this.toggle();
 		}
 
@@ -178,8 +196,11 @@
 					el.classList.add('selected');
 
 					container.querySelector('.' + _this.classes.current).innerText = el.innerText;
-
 					container.classList.remove('show');
+
+					let select = container.previousSibling;
+					select.value = el.dataset.value;
+					select.dispatchEvent(new Event('change'));
 				}
 			});
 
@@ -195,7 +216,9 @@
 					}
 				}
 			});
+		}
 
+		search() {
 		}
 	}
 

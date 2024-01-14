@@ -37,25 +37,30 @@ class vg {
 		}
 	}
 
-/*	find(el, found) {
-		let found_elements = [];
+	merge(...objects) {
+		const _this = this;
 
-		// Find all the outer matched elements
-		var outers = document.querySelectorAll('.post');
+		const isObject = obj => obj && typeof obj === 'object';
 
-		for(var i=0; i<outers.length; i++) {
-			var elements_in_outer = outers[i].querySelectorAll(".thumb");
+		return objects.reduce((prev, obj) => {
+			Object.keys(obj).forEach(key => {
+				const pVal = prev[key];
+				const oVal = obj[key];
 
-			// document.querySelectorAll() returns an "array-like" collection of elements
-			// convert this "array-like" collection to an array
-			elements_in_outer = Array.prototype.slice.call(elements_in_outer);
+				if (Array.isArray(pVal) && Array.isArray(oVal)) {
+					prev[key] = pVal.concat(...oVal);
+				}
+				else if (isObject(pVal) && isObject(oVal)) {
+					prev[key] = _this.merge(pVal, oVal);
+				}
+				else {
+					prev[key] = oVal;
+				}
+			});
 
-			found_elements = found_elements.concat(elements_in_outer);
-		}
-
-// The final 4 elements
-		console.log(found_elements);
-	}*/
+			return prev;
+		}, {});
+	}
 }
 
 export default new vg;

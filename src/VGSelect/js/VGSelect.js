@@ -1,5 +1,9 @@
 import vg from "../../util/vg";
 
+const setParams = function (element, params, arg) {
+	return vg.merge(params, arg)
+}
+
 class VGSelect {
 	constructor(element, arg = {}) {
 		this.classes = {
@@ -10,6 +14,10 @@ class VGSelect {
 			'current': 'vg-select-current'
 		}
 
+		const defaultParams = {
+			'search': false
+		}
+
 		if (!element) {
 			console.error('Первый параметр не должен быть пустым');
 			return false;
@@ -18,6 +26,7 @@ class VGSelect {
 				console.error('Тэг должен быть "select"');
 				return false;
 			} else {
+				this.settings = setParams(element, defaultParams, arg);
 				this.create(element);
 			}
 		}
@@ -72,6 +81,10 @@ class VGSelect {
 		// Добавляем все созданный контейнер после селекта
 		element.insertAdjacentElement('afterend', select);
 
+		if (this.settings.search) {
+			this.search();
+		}
+
 		this.toggle();
 	}
 
@@ -115,8 +128,11 @@ class VGSelect {
 				el.classList.add('selected');
 
 				container.querySelector('.' + _this.classes.current).innerText = el.innerText;
-
 				container.classList.remove('show');
+
+				let select = container.previousSibling;
+				select.value = el.dataset.value;
+				select.dispatchEvent(new Event('change'));
 			}
 		});
 
@@ -132,7 +148,10 @@ class VGSelect {
 				}
 			}
 		});
+	}
 
+	search() {
+		const _this = this;
 	}
 }
 

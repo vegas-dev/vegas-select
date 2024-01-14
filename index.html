@@ -52,17 +52,15 @@
 					</select>
 				</div>
 				<div class="col">
-					<label for="city" class="d-block mb-2">Выбрать город</label>
-					<select id="city" class="vg-select" name="city">
-						<option value="1">Москва</option>
-						<option value="2">Подольск</option>
-						<option value="3">Мытищи</option>
-						<option value="4">Чехов</option>
-						<option value="5">Балашиха</option>
-					</select>
+					<div id="select-ajax-loaded"></div>
+				</div>
+				<div class="col-12 mt-3">
+					<button type="submit" class="btn btn-primary">Отправить</button>
 				</div>
 			</div>
 		</form>
+
+		<div id="form-monitor"></div>
 	</main>
 </div>
 
@@ -76,6 +74,51 @@
 		for (const element of elements) {
 			new VGSelect(element, {})
 		}
+
+		let form = document.querySelector('form');
+		form.onsubmit = function () {
+			let data = new FormData(this),
+				monitor = document.getElementById('form-monitor');
+
+			let ul = document.createElement('ul');
+
+			for (let [key, value] of data) {
+				let li = document.createElement('li');
+
+				li.innerHTML = '<span>Элемент: <b>' + key + '</b></span><span>Выбрано: <b>' + value + '</b></span>'
+				ul.append(li);
+			}
+
+			monitor.append(ul);
+
+			return false;
+		}
+
+		function loadXMLDoc() {
+			const xmlHTTP = new XMLHttpRequest();
+
+			xmlHTTP.onreadystatechange = function() {
+				if (xmlHTTP.readyState === XMLHttpRequest.DONE) {
+					if (xmlHTTP.status === 200) {
+						let $selectAjaxLoaded = document.getElementById("select-ajax-loaded");
+						$selectAjaxLoaded.innerHTML = xmlHTTP.responseText;
+
+						let selects = $selectAjaxLoaded.querySelectorAll('select');
+
+						if (selects.length) {
+							for (const select of selects) {
+								new VGSelect(select, {})
+							}
+						}
+					}
+				}
+			};
+
+			xmlHTTP.open("GET", "php/ajax.php", true);
+			xmlHTTP.send();
+		}
+
+		loadXMLDoc();
 	});
 </script>
 </body>

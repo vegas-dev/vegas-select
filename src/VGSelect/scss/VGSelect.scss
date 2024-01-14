@@ -7,22 +7,29 @@ select {
 }
 
 .vg-select {
-	@include mix-vars($select-current-map);
+	@include mix-vars('current', $select-current-map);
+	@include mix-vars('dropdown', $select-dropdown-map);
+	@include mix-vars('list', $select-list-map);
+	@include mix-vars('list-hover', $select-list-hover-map);
 	position: relative;
 
 	&-current {
 		@each $key, $value in $select-current-map {
-			#{$key}: var(--vg-select-#{$key})
+			#{$key}: var(--vg-select-current-#{$key})
 		}
+		box-sizing: border-box;
+		cursor: pointer;
+		outline: none;
+		position: relative;
+		z-index: 10;
 	}
 
 	&-dropdown {
+		@each $key, $value in $select-dropdown-map {
+			#{$key}: var(--vg-select-dropdown-#{$key})
+		}
 		position: absolute;
-		background-color: #fff;
-		border-radius: 5px;
-		box-shadow: 0 0 0 1px rgba(68, 68, 68, 0.11);
 		box-sizing: border-box;
-		margin-top: 4px;
 		opacity: 0;
 		overflow: hidden;
 		padding: 0;
@@ -35,6 +42,40 @@ select {
 		transform: scale(0.75) translateY(-21px);
 		transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
 		z-index: 9;
+		margin-top: .25rem;
+	}
+
+	&-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+
+		&--option {
+			@each $key, $value in $select-list-map {
+				#{$key}: var(--vg-select-list-#{$key})
+			}
+			display: block;
+			width: 100%;
+			cursor: pointer;
+			transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
+
+			&:last-child {
+				border: none;
+			}
+
+			&:hover, &.selected {
+				@each $key, $value in $select-list-hover-map {
+					#{$key}: var(--vg-select-list-hover-#{$key})
+				}
+			}
+
+			&.disabled {
+				opacity: .6;
+				cursor: not-allowed;
+			}
+		}
 	}
 
 	&.show {

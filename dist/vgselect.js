@@ -69,7 +69,14 @@
 	var vg$1 = new vg;
 
 	const setParams = function (element, params, arg) {
-		return vg$1.merge(params, arg)
+		let mParams = vg$1.merge(params, arg),
+			data = [].filter.call(element.attributes, function(at) { return /^data-/.test(at.name); });
+
+		for (let val of data) {
+			if (val.name === 'data-search') mParams.search = val.value !== 'false';
+		}
+
+		return mParams;
 	};
 
 	class VGSelect {
@@ -79,7 +86,8 @@
 				'dropdown': 'vg-select-dropdown',
 				'list': 'vg-select-list',
 				'option': 'vg-select-list--option',
-				'current': 'vg-select-current'
+				'current': 'vg-select-current',
+				'search': 'vg-select-search'
 			};
 
 			const defaultParams = {
@@ -150,10 +158,10 @@
 			element.insertAdjacentElement('afterend', select);
 
 			if (this.settings.search) {
-				this.search();
+				this.search(select);
 			}
 
-			this.toggle();
+			this.toggle(select);
 		}
 
 		toggle() {
@@ -218,10 +226,15 @@
 			});
 		}
 
-		search() {
+		search(select) {
 			const _this = this;
 
-			console.log(_this.settings.search);
+			let dropdown = select.querySelector('.' + _this.classes.dropdown);
+
+			let search_container = document.createElement('div');
+			search_container.classList.add(_this.classes.search);
+
+			dropdown.prepend(search_container);
 		}
 	}
 

@@ -18,6 +18,10 @@
 	--vg-select-list-border-bottom-color: var(--bs-border-color);
 	--vg-select-list-hover-background-color: var(--bs-link-hover-color);
 	--vg-select-list-hover-border-bottom-color: var(--bs-link-hover-color);
+	--vg-select-list-scrollbar-bg: var(--bs-tertiary-bg);
+	--vg-select-list-scrollbar-thumb: var(--bs-border-color);
+	--vg-select-search-background-color: var(--bs-body-bg);
+	--vg-select-search-color: var(--bs-body-color);
 }
 
 #form-monitor {

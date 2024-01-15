@@ -115,6 +115,11 @@ class VGSelect {
 				element.classList.remove('show');
 			} else {
 				element.classList.add('show');
+
+				if (_this.settings.search) {
+					let input = element.querySelector('input');
+					if (input) input.focus();
+				}
 			}
 
 			e.preventDefault();
@@ -166,7 +171,52 @@ class VGSelect {
 		let search_container = document.createElement('div');
 		search_container.classList.add(_this.classes.search);
 
+		let input = document.createElement('input');
+		input.setAttribute('name', 'vg-select-search');
+		input.setAttribute('type', 'text');
+		input.setAttribute('placeholder', 'Поиск...');
+
+		search_container.append(input);
 		dropdown.prepend(search_container);
+
+		vg.listener('keyup', '[name=vg-select-search]', function (el, e) {
+			e.preventDefault();
+
+			let selectList = el.closest('.' + _this.classes.dropdown).querySelector('.' + _this.classes.list);
+			if (selectList) {
+				let options = selectList.querySelectorAll('.' + _this.classes.option),
+					value  = el.value;
+
+				for (const option of options) {
+					vg.show(option);
+				}
+
+				if (value.length) {
+					value = value.trim();
+					value = value.toLowerCase();
+					value = Transliterate(value, true);
+
+					for (const option of options) {
+						let text = option.innerText.toLowerCase();
+
+						if (text.indexOf(value) === -1) vg.hide(option);
+					}
+				}
+			}
+		});
+
+		const Transliterate = function (text, enToRu) {
+			let ru = "й ц у к е н г ш щ з х ъ ф ы в а п р о л д ж э я ч с м и т ь б ю".split(/ +/g);
+			let en = "q w e r t y u i o p [ ] a s d f g h j k l ; ' z x c v b n m , .".split(/ +/g);
+			let x;
+
+			for (x = 0; x < ru.length; x++) {
+				text = text.split(enToRu ? en[x] : ru[x]).join(enToRu ? ru[x] : en[x]);
+				text = text.split(enToRu ? en[x].toUpperCase() : ru[x].toUpperCase()).join(enToRu ? ru[x].toUpperCase() : en[x].toUpperCase());
+			}
+
+			return text;
+		};
 	}
 }
 

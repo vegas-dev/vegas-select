@@ -11,6 +11,11 @@ select {
 	@include mix-vars('dropdown', $select-dropdown-map);
 	@include mix-vars('list', $select-list-map);
 	@include mix-vars('list-hover', $select-list-hover-map);
+	@include mix-vars('search', $select-search-map);
+	--vg-select-list-max-height: #{$select-list-max-height};
+	--vg-select-list-scrollbar-width: #{$select-list-scrollbar-width};
+	--vg-select-list-scrollbar-bg: #{$select-list-scrollbar-bg};
+	--vg-select-list-scrollbar-thumb: #{$select-list-scrollbar-thumb};
 	position: relative;
 
 	&-current {
@@ -22,6 +27,19 @@ select {
 		outline: none;
 		position: relative;
 		z-index: 10;
+
+		&:after {
+			content: '';
+			position: absolute;
+			right: 16px;
+			top: 50%;
+			transform: translateY(-50%);
+			transition: all .4s ease-in-out;
+			background-image: url("data:image/svg+xml, " + $select-current-svg);
+			background-repeat: no-repeat;
+			width: 16px;
+			height: 16px;
+		}
 	}
 
 	&-dropdown {
@@ -51,6 +69,24 @@ select {
 		list-style: none;
 		display: flex;
 		flex-direction: column;
+		max-height: var(--vg-select-list-max-height);
+		overflow-y: auto;
+
+		&::-webkit-scrollbar-track {
+			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+			background-color: var(--vg-select-list-scrollbar-bg);
+		}
+
+		&::-webkit-scrollbar
+		{
+			width: var(--vg-select-list-scrollbar-width);
+			background-color: var(--vg-select-list-scrollbar-bg);
+		}
+
+		&::-webkit-scrollbar-thumb
+		{
+			background-color: var(--vg-select-list-scrollbar-thumb);
+		}
 
 		&--option {
 			@each $key, $value in $select-list-map {
@@ -59,7 +95,7 @@ select {
 			display: block;
 			width: 100%;
 			cursor: pointer;
-			transition: all 0.2s cubic-bezier(0.5, 0, 0, 1.25), opacity 0.15s ease-out;
+			transition: all .4s ease-in-out;
 
 			&:last-child {
 				border: none;
@@ -78,7 +114,25 @@ select {
 		}
 	}
 
+	&-search {
+		input {
+			@each $key, $value in $select-search-map {
+				#{$key}: var(--vg-select-search-#{$key})
+			}
+			padding: 8px;
+			border: none;
+			outline: none;
+			width: 100%;
+		}
+	}
+
 	&.show {
+		.vg-select-current {
+			&:after {
+				transform: translateY(-50%) rotate(180deg);
+			}
+		}
+
 		.vg-select-dropdown {
 			transform: scale(1) translateY(0);
 			opacity: 1;

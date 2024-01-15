@@ -5,7 +5,7 @@ $select-current-map: (
 	color: black,
 	border-width: 1px,
 	border-style: solid,
-	border-color: #f5f5f5,
+	border-color: #dddddd,
 	border-radius: 5px,
 	padding-left: 16px,
 	padding-right: 32px,
@@ -15,14 +15,16 @@ $select-current-map: (
 	font-size: 16px,
 ) !default;
 
+$select-current-svg: '<svg aria-hidden="true" focusable="false" data-prefix="fa-light" data-icon="chevron-down" class="svg-inline--fa fa-chevron-down fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M4 181C7 178 12 176 16 176C20 176 24 177 27 180L224 362L421 180C428 174 438 175 444 181C450 188 449 198 443 204L235 396C229 401 219 401 213 396L5 204C-1 198 -2 188 4 181Z" fill="gray"/></svg>' !default;
+
 $select-dropdown-map: (
 	background-color: white,
 	color: black,
 	border-width: 1px,
 	border-style: solid,
-	border-color: #f5f5f5,
+	border-color: #dddddd,
 	border-radius: 5px,
-	box-shadow: 0 0 0 1px rgba(68, 68, 68, 0.11),
+	box-shadow: 0 7px 12px 1px rgba(68, 68, 68, 0.11),
 ) !default;
 
 $select-list-map: (
@@ -37,10 +39,20 @@ $select-list-map: (
 	border-bottom-color: #f5f5f5,
 ) !default;
 
+$select-list-max-height: 286px !default;
+$select-list-scrollbar-width: 6px !default;
+$select-list-scrollbar-bg: #F5F5F5 !default;
+$select-list-scrollbar-thumb: #999 !default;
+
 $select-list-hover-map: (
 	background-color: #f7f7f7,
 	color: black,
 	border-bottom-color: #f5f5f5,
+) !default;
+
+$select-search-map: (
+	background-color: #f2f2f2,
+	color: #000000
 ) !default;
 
 @mixin mix-vars($element, $properties) {

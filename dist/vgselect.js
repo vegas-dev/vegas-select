@@ -1,18 +1,16 @@
 (function (exports) {
 	'use strict';
 
-	class vg {
-		constructor() {}
-
-		hide(el) {
+	const vg = {
+		hide: function (el) {
 			el.style.display = 'none';
-		}
+		},
 
-		show(el, state = 'block') {
+		show: function (el, state = 'block') {
 			el.style.display = state;
-		}
+		},
 
-		listener(event, el, callback) {
+		listener: function (event, el, callback) {
 			if (el) {
 				document.addEventListener(event, function (e) {
 					let selectors = document.body.querySelectorAll(el),
@@ -38,9 +36,9 @@
 					}
 				});
 			}
-		}
+		},
 
-		merge(...objects) {
+		merge: function (...objects) {
 			const _this = this;
 
 			const isObject = obj => obj && typeof obj === 'object';
@@ -63,13 +61,69 @@
 
 				return prev;
 			}, {});
-		}
-	}
+		},
 
-	var vg$1 = new vg;
+		ajax: {
+			x: function () {
+				if (typeof XMLHttpRequest !== 'undefined') {
+					return new XMLHttpRequest();
+				}
+				let versions = [
+					"MSXML2.XmlHttp.6.0",
+					"MSXML2.XmlHttp.5.0",
+					"MSXML2.XmlHttp.4.0",
+					"MSXML2.XmlHttp.3.0",
+					"MSXML2.XmlHttp.2.0",
+					"Microsoft.XmlHttp"
+				];
+
+				let xhr;
+				for (let i = 0; i < versions.length; i++) {
+					try {
+						xhr = new ActiveXObject(versions[i]);
+						break;
+					} catch (e) {}
+				}
+				return xhr;
+			},
+
+			send: function (url, callback, method, data, async) {
+				if (async === undefined) {
+					async = true;
+				}
+				let x = vg.ajax.x();
+				x.open(method, url, async);
+				x.onreadystatechange = function () {
+					if (x.readyState === 4) {
+						switch (x.status) {
+							case 200:
+								callback('success', x.responseText);
+								break;
+							default:
+								callback('error', x.responseText);
+								break;
+						}
+					}
+				};
+				x.send(data);
+			},
+
+			get: function (url, data, callback, async) {
+				let query = [];
+				for (let key of data) {
+					query.push(encodeURIComponent(key[0]) + '=' + encodeURIComponent(key[1]));
+				}
+				vg.ajax.send(url + (query.length ? '?' + query.join('&') : ''), callback, 'GET', null, async);
+			},
+
+			post: function (url, data, callback, async) {
+				vg.ajax.send(url, callback, 'POST', data, async);
+			}
+		}
+	};
 
 	const setParams = function (element, params, arg) {
-		let mParams = vg$1.merge(params, arg),
+		let mParams = vg.merge(params, arg),
 			data = [].filter.call(element.attributes, function(at) { return /^data-/.test(at.name); });
 
 		for (let val of data) {
@@ -167,7 +221,7 @@
 		toggle() {
 			const _this = this;
 
-			vg$1.listener('click', '.' + _this.classes.current, function (el, e) {
+			vg.listener('click', '.' + _this.classes.current, function (el, e) {
 				let element = el.closest('.vg-select');
 
 				let selects = document.querySelectorAll('.vg-select');
@@ -193,7 +247,7 @@
 				e.preventDefault();
 			});
 
-			vg$1.listener('click', '.' + _this.classes.option, function (el, e) {
+			vg.listener('click', '.' + _this.classes.option, function (el, e) {
 				e.preventDefault();
 
 				if (!el.classList.contains('disabled')) {
@@ -217,7 +271,7 @@
 				}
 			});
 
-			vg$1.listener('mouseup', '', function (e) {
+			vg.listener('mouseup', '', function (e) {
 				e.preventDefault();
 
 				if (!e.target.closest('.vg-select')) {
@@ -247,7 +301,7 @@
 			search_container.append(input);
 			dropdown.prepend(search_container);
 
-			vg$1.listener('keyup', '[name=vg-select-search]', function (el, e) {
+			vg.listener('keyup', '[name=vg-select-search]', function (el, e) {
 				e.preventDefault();
 
 				let selectList = el.closest('.' + _this.classes.dropdown).querySelector('.' + _this.classes.list);
@@ -256,7 +310,7 @@
 						value  = el.value;
 
 					for (const option of options) {
-						vg$1.show(option);
+						vg.show(option);
 					}
 
 					if (value.length) {
@@ -267,7 +321,7 @@
 						for (const option of options) {
 							let text = option.innerText.toLowerCase();
 
-							if (text.indexOf(value) === -1) vg$1.hide(option);
+							if (text.indexOf(value) === -1) vg.hide(option);
 						}
 					}
 				}

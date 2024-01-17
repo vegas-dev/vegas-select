@@ -1,15 +1,13 @@
-class vg {
-	constructor() {}
-
-	hide(el) {
+const vg = {
+	hide: function (el) {
 		el.style.display = 'none';
-	}
+	},
 
-	show(el, state = 'block') {
+	show: function (el, state = 'block') {
 		el.style.display = state;
-	}
+	},
 
-	listener(event, el, callback) {
+	listener: function (event, el, callback) {
 		if (el) {
 			document.addEventListener(event, function (e) {
 				let selectors = document.body.querySelectorAll(el),
@@ -35,9 +33,9 @@ class vg {
 				}
 			});
 		}
-	}
+	},
 
-	merge(...objects) {
+	merge: function (...objects) {
 		const _this = this;
 
 		const isObject = obj => obj && typeof obj === 'object';
@@ -60,7 +58,68 @@ class vg {
 
 			return prev;
 		}, {});
+	},
+
+	ajax: {
+		x: function () {
+			if (typeof XMLHttpRequest !== 'undefined') {
+				return new XMLHttpRequest();
+			}
+			let versions = [
+				"MSXML2.XmlHttp.6.0",
+				"MSXML2.XmlHttp.5.0",
+				"MSXML2.XmlHttp.4.0",
+				"MSXML2.XmlHttp.3.0",
+				"MSXML2.XmlHttp.2.0",
+				"Microsoft.XmlHttp"
+			];
+
+			let xhr;
+			for (let i = 0; i < versions.length; i++) {
+				try {
+					xhr = new ActiveXObject(versions[i]);
+					break;
+				} catch (e) {}
+			}
+			return xhr;
+		},
+
+		send: function (url, callback, method, data, async) {
+			if (async === undefined) {
+				async = true;
+			}
+			let x = vg.ajax.x();
+			x.open(method, url, async);
+			x.onreadystatechange = function () {
+				if (x.readyState === 4) {
+					switch (x.status) {
+						case 200:
+							callback('success', x.responseText)
+							break;
+						default:
+							callback('error', x.responseText)
+							break;
+					}
+				}
+			};
+			if (method === 'POST') {
+				//x.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			}
+			x.send(data)
+		},
+
+		get: function (url, data, callback, async) {
+			let query = [];
+			for (let key of data) {
+				query.push(encodeURIComponent(key[0]) + '=' + encodeURIComponent(key[1]));
+			}
+			vg.ajax.send(url + (query.length ? '?' + query.join('&') : ''), callback, 'GET', null, async)
+		},
+
+		post: function (url, data, callback, async) {
+			vg.ajax.send(url, callback, 'POST', data, async)
+		}
 	}
 }
 
-export default new vg;
+export default vg;

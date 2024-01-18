@@ -8,31 +8,25 @@ const vg = {
 	},
 
 	listener: function (event, el, callback) {
-		if (el) {
-			document.addEventListener(event, function (e) {
-				let selectors = document.body.querySelectorAll(el),
-					element = e.target,
-					index = -1;
+		document.addEventListener(event, function (e) {
+			let selectors = document.body.querySelectorAll(el),
+				element = e.target,
+				index = -1;
 
-				while (element && ((index = Array.prototype.indexOf.call(selectors, element)) === -1)) {
-					element = element.parentElement;
-				}
+			while (element && ((index = Array.prototype.indexOf.call(selectors, element)) === -1)) {
+				element = element.parentElement;
+			}
 
-				if (index > -1) {
-					(function () {
-						if (typeof callback === "function") {
-							callback(element, e);
-						}
-					}).call(element, e);
-				}
-			});
-		} else {
-			window.addEventListener(event, function (e) {
-				if (typeof callback === "function") {
-					callback(e);
-				}
-			});
-		}
+			if (index > -1) {
+				(function () {
+					if (typeof callback === "function") {
+						callback(element, e);
+					}
+
+					e.preventDefault();
+				}).call(element, e);
+			}
+		});
 	},
 
 	merge: function (...objects) {

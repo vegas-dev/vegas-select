@@ -11,31 +11,25 @@
 		},
 
 		listener: function (event, el, callback) {
-			if (el) {
-				document.addEventListener(event, function (e) {
-					let selectors = document.body.querySelectorAll(el),
-						element = e.target,
-						index = -1;
+			document.addEventListener(event, function (e) {
+				let selectors = document.body.querySelectorAll(el),
+					element = e.target,
+					index = -1;
 
-					while (element && ((index = Array.prototype.indexOf.call(selectors, element)) === -1)) {
-						element = element.parentElement;
-					}
+				while (element && ((index = Array.prototype.indexOf.call(selectors, element)) === -1)) {
+					element = element.parentElement;
+				}
 
-					if (index > -1) {
-						(function () {
-							if (typeof callback === "function") {
-								callback(element, e);
-							}
-						}).call(element, e);
-					}
-				});
-			} else {
-				window.addEventListener(event, function (e) {
-					if (typeof callback === "function") {
-						callback(e);
-					}
-				});
-			}
+				if (index > -1) {
+					(function () {
+						if (typeof callback === "function") {
+							callback(element, e);
+						}
+
+						e.preventDefault();
+					}).call(element, e);
+				}
+			});
 		},
 
 		merge: function (...objects) {
@@ -140,6 +134,7 @@
 				'dropdown': 'vg-select-dropdown',
 				'list': 'vg-select-list',
 				'option': 'vg-select-list--option',
+				'optgroup': 'vg-select-list--optgroup',
 				'current': 'vg-select-current',
 				'search': 'vg-select-search'
 			};
@@ -193,17 +188,23 @@
 
 			let i = 0;
 			for (const option of options) {
-				let li = document.createElement('li');
-				li.dataset.value = option.getAttribute('value');
-				li.innerText = option.innerText;
-				li.classList.add(this.classes.option);
+				let li = document.createElement('li'),
+					optGroup = option.closest('optgroup');
 
-				if (i === element.selectedIndex) li.classList.add('selected');
-				if (option.hasAttribute('disabled')) li.classList.add('disabled');
+				if (optGroup) {
+					console.log(optGroup.getAttribute('label'));
+				} else {
+					li.dataset.value = option.getAttribute('value');
+					li.innerText = option.innerText;
+					li.classList.add(this.classes.option);
 
-				list.append(li);
+					if (i === element.selectedIndex) li.classList.add('selected');
+					if (option.hasAttribute('disabled')) li.classList.add('disabled');
 
-				i++;
+					list.append(li);
+
+					i++;
+				}
 			}
 
 			dropdown.append(list);
@@ -218,34 +219,35 @@
 			this.toggle(select);
 		}
 
-		toggle() {
+		toggle(select) {
 			const _this = this;
 
-			vg.listener('click', '.' + _this.classes.current, function (el, e) {
-				let element = el.closest('.vg-select');
+			select.querySelector('.' + _this.classes.current).onclick = function (e) {
+				let el = e.target,
+					container = el.closest('.vg-select');
 
 				let selects = document.querySelectorAll('.vg-select');
 				if (selects.length) {
 					for (const els of selects) {
-						if (els !== element) {
+						if (els !== container) {
 							els.classList.remove('show');
 						}
 					}
 				}
 
-				if (element.classList.contains('show')) {
-					element.classList.remove('show');
+				if (container.classList.contains('show')) {
+					container.classList.remove('show');
 				} else {
-					element.classList.add('show');
+					container.classList.add('show');
 
 					if (_this.settings.search) {
-						let input = element.querySelector('input');
+						let input = container.querySelector('input');
 						if (input) input.focus();
 					}
 				}
 
-				e.preventDefault();
-			});
+				return false;
+			};
 
 			vg.listener('click', '.' + _this.classes.option, function (el, e) {
 				e.preventDefault();
@@ -271,9 +273,7 @@
 				}
 			});
 
-			vg.listener('mouseup', '', function (e) {
-				e.preventDefault();
-
+			window.addEventListener('click', function (e) {
 				if (!e.target.closest('.vg-select')) {
 					let selects = document.querySelectorAll('.vg-select');
 					if (selects.length) {

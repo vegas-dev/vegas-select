@@ -54,6 +54,21 @@
 				<div class="col">
 					<div id="select-ajax-loaded"></div>
 				</div>
+				<div class="col">
+					<label for="color" class="d-block mb-2">Выберите цвет</label>
+					<select id="color" class="vg-select w-100" name="color">
+						<optgroup label="Цвет">
+							<option value="c1">Апельсиновый</option>
+							<option value="c2">Лимонный</option>
+							<option value="c3">Персиковый</option>
+						</optgroup>
+						<optgroup label="Тон">
+							<option value="s1">Светлый</option>
+							<option value="s2">Нормальный</option>
+							<option value="s3">Темный</option>
+						</optgroup>
+					</select>
+				</div>
 				<div class="col-12 mt-3">
 					<button type="submit" class="btn btn-primary">Отправить</button>
 				</div>
@@ -70,7 +85,6 @@
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
 		let elements = document.querySelectorAll('.vg-select');
-
 		for (const element of elements) {
 			new VGSelect(element, {})
 		}

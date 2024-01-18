@@ -188,23 +188,32 @@
 
 			let i = 0;
 			for (const option of options) {
-				let li = document.createElement('li'),
-					optGroup = option.closest('optgroup');
+				let li = document.createElement('li');
 
-				if (optGroup) {
-					console.log(optGroup.getAttribute('label'));
-				} else {
+				li.dataset.value = option.getAttribute('value');
+				li.innerText = option.innerText;
+				li.classList.add(this.classes.option);
+
+				if (i === element.selectedIndex) li.classList.add('selected');
+				if (option.hasAttribute('disabled')) li.classList.add('disabled');
+
+				// TODO
+				/*let optGroup = option.closest('optgroup');
+				if (!optGroup) {
 					li.dataset.value = option.getAttribute('value');
 					li.innerText = option.innerText;
 					li.classList.add(this.classes.option);
 
 					if (i === element.selectedIndex) li.classList.add('selected');
 					if (option.hasAttribute('disabled')) li.classList.add('disabled');
+				} else {
+					li.classList.add('optgroup');
+					li.innerText = optGroup.getAttribute('label');
+				}*/
 
-					list.append(li);
+				list.append(li);
 
-					i++;
-				}
+				i++;
 			}
 
 			dropdown.append(list);

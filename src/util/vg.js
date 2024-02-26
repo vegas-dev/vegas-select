@@ -113,6 +113,29 @@ const vg = {
 		post: function (url, data, callback, async) {
 			vg.ajax.send(url, callback, 'POST', data, async)
 		}
+	},
+
+	getDataAttributes: function (el) {
+		let data = {};
+		[].forEach.call(el.attributes, function(attr) {
+			if (/^data-/.test(attr.name)) {
+				let camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
+					return $1.toUpperCase();
+				});
+				data[camelCaseName] = attr.value;
+			}
+		});
+		return data;
+	},
+
+	isEmptyObj: function (obj) {
+		for (let prop in obj) {
+			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				return false;
+			}
+		}
+
+		return true
 	}
 }
 

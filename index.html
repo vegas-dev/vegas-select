@@ -33,12 +33,22 @@
 			<div class="row">
 				<div class="col">
 					<label for="country" class="d-block mb-2">Выбрать страну</label>
-					<select id="country" class="vg-select w-100" name="country">
-						<option value="1">Россия</option>
-						<option value="2">Узбекистан</option>
-						<option value="3">Казахстан</option>
-						<option value="4">Белоруссия</option>
-						<option value="5" disabled>Китай</option>
+					<select id="country" class="vg-select w-100" name="country" data-max="10">
+						<option value="1" data-price="0">
+							Россия
+						</option>
+						<option value="2" data-price="1">
+							Узбекистан
+						</option>
+						<option value="3" data-price="2">
+							Казахстан
+						</option>
+						<option value="4" data-price="3">
+							Белоруссия
+						</option>
+						<option value="5" data-price="4" disabled>
+							Китай
+						</option>
 					</select>
 				</div>
 				<div class="col">
@@ -134,6 +144,14 @@
 
 		loadXMLDoc();
 	});
+
+/*	const COUNTRY = document.getElementById('country');
+	COUNTRY.addEventListener('change', function (e) {
+		let el = e.target;
+
+		let selected = el.options[el.selectedIndex];
+		console.log(selected.dataset.price)
+	});*/
 </script>
 </body>
 </html>

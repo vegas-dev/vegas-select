@@ -113,6 +113,29 @@
 			post: function (url, data, callback, async) {
 				vg.ajax.send(url, callback, 'POST', data, async);
 			}
+		},
+
+		getDataAttributes: function (el) {
+			let data = {};
+			[].forEach.call(el.attributes, function(attr) {
+				if (/^data-/.test(attr.name)) {
+					let camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
+						return $1.toUpperCase();
+					});
+					data[camelCaseName] = attr.value;
+				}
+			});
+			return data;
+		},
+
+		isEmptyObj: function (obj) {
+			for (let prop in obj) {
+				if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+					return false;
+				}
+			}
+
+			return true
 		}
 	};
 
@@ -171,10 +194,17 @@
 				select.classList.add(_class);
 			}
 
+			let elData = vg.getDataAttributes(element);
+			if (!vg.isEmptyObj(elData)) {
+				for (const key of Object.keys(elData)) {
+					select.setAttribute('data-' + key, elData[key]);
+				}
+			}
+
 			// Создаем элемент с отображением выбранного варианта
 			let current = document.createElement('div');
 			current.classList.add(this.classes.current);
-			current.innerText = option_selected;
+			current.innerText = option_selected.trim();
 			select.append(current);
 
 			// Создаем элемент выпадающего списка
@@ -190,9 +220,16 @@
 			for (const option of options) {
 				let li = document.createElement('li');
 
-				li.dataset.value = option.getAttribute('value');
-				li.innerText = option.innerText;
+				li.innerText = option.innerText.trim();
 				li.classList.add(this.classes.option);
+				li.dataset.value = option.getAttribute('value');
+
+				let liData = vg.getDataAttributes(option);
+				if (!vg.isEmptyObj(liData)) {
+					for (const key of Object.keys(liData)) {
+						li.setAttribute('data-' + key, liData[key]);
+					}
+				}
 
 				if (i === element.selectedIndex) li.classList.add('selected');
 				if (option.hasAttribute('disabled')) li.classList.add('disabled');

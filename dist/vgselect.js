@@ -141,7 +141,9 @@
 
 	const setParams = function (element, params, arg) {
 		let mParams = vg.merge(params, arg),
-			data = [].filter.call(element.attributes, function(at) { return /^data-/.test(at.name); });
+			data = [].filter.call(element.attributes, function (at) {
+				return /^data-/.test(at.name);
+			});
 
 		for (let val of data) {
 			if (val.name === 'data-search') mParams.search = val.value !== 'false';
@@ -181,6 +183,10 @@
 		}
 
 		create(element) {
+			if (element.dataset?.inited === 'true') {
+				return;
+			}
+
 			let option_selected = element.options[element.selectedIndex].innerText,
 				options = element.options;
 
@@ -258,6 +264,9 @@
 			// Добавляем все созданный контейнер после селекта
 			element.insertAdjacentElement('afterend', select);
 
+			// помечаем элемент инициализированным
+			element.dataset.inited = true;
+
 			if (this.settings.search) {
 				this.search(select);
 			}
@@ -295,28 +304,32 @@
 				return false;
 			};
 
-			vg.listener('click', '.' + _this.classes.option, function (el, e) {
-				e.preventDefault();
+			select.querySelectorAll('.' + _this.classes.option).forEach((option) => {
+				option.addEventListener('click', (e) => {
+					e.preventDefault();
 
-				if (!el.classList.contains('disabled')) {
-					let container = el.closest('.' + _this.classes.container),
-						options = container.querySelectorAll('.' + _this.classes.option);
+					let el = e.target;
 
-					if (options.length) {
-						for (const option of options) {
-							option.classList.remove('selected');
+					if (!el.classList.contains('disabled')) {
+						let container = el.closest('.' + _this.classes.container),
+							options = container.querySelectorAll('.' + _this.classes.option);
+
+						if (options.length) {
+							for (const option of options) {
+								option.classList.remove('selected');
+							}
 						}
+
+						el.classList.add('selected');
+
+						container.querySelector('.' + _this.classes.current).innerText = el.innerText;
+						container.classList.remove('show');
+
+						let select = container.previousSibling;
+						select.value = el.dataset.value;
+						select.dispatchEvent(new Event('change', { bubbles: true }));
 					}
-
-					el.classList.add('selected');
-
-					container.querySelector('.' + _this.classes.current).innerText = el.innerText;
-					container.classList.remove('show');
-
-					let select = container.previousSibling;
-					select.value = el.dataset.value;
-					select.dispatchEvent(new Event('change'));
-				}
+				});
 			});
 
 			window.addEventListener('click', function (e) {
@@ -347,13 +360,15 @@
 			search_container.append(input);
 			dropdown.prepend(search_container);
 
-			vg.listener('keyup', '[name=vg-select-search]', function (el, e) {
+			search_container.querySelector('[name=vg-select-search]').addEventListener('keyup', (e) => {
 				e.preventDefault();
+
+				let el = e.target;
 
 				let selectList = el.closest('.' + _this.classes.dropdown).querySelector('.' + _this.classes.list);
 				if (selectList) {
 					let options = selectList.querySelectorAll('.' + _this.classes.option),
-						value  = el.value;
+						value = el.value;
 
 					for (const option of options) {
 						vg.show(option);

@@ -239,6 +239,7 @@
 
 				if (i === element.selectedIndex) li.classList.add('selected');
 				if (option.hasAttribute('disabled')) li.classList.add('disabled');
+				if (option.hasAttribute('hidden')) li.classList.add('hidden');
 
 				// TODO
 				/*let optGroup = option.closest('optgroup');

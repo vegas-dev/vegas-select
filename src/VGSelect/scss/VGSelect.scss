@@ -111,6 +111,10 @@ select {
 				opacity: .6;
 				cursor: not-allowed;
 			}
+
+			&.hidden {
+				display: none !important;
+			}
 		}
 	}
 

@@ -31,22 +31,20 @@
 	<main class="container pt-5">
 		<form action="#" method="post">
 			<div class="row">
-				<div class="col">
-					<label for="country" class="d-block mb-2">Выбрать страну</label>
-					<select id="country" class="vg-select w-100" name="country" data-max="10">
-						<option value="1" data-price="0">
+				<div class="col-lg-3">
+					<label for="country" class="d-block mb-2">Выбрать страну (.is-invalid )</label>
+					<select id="country" class="vg-select w-100" name="country" data-max="10" required>
+						<option value="2" data-price="1">
 							Россия
 						</option>
-						<option value="2" data-price="1">
-							Узбекистан
-						</option>
-						<option value="3" data-price="2">
+						<option value="3" data-price="2">Узбекистан</option>
+						<option value="4" data-price="3">
 							Казахстан
 						</option>
-						<option value="4" data-price="3">
+						<option value="5" data-price="4" selected>
 							Белоруссия
 						</option>
-						<option value="5" data-price="4" disabled>
+						<option value="6" data-price="5" disabled>
 							Китай
 						</option>
 					</select>
@@ -55,7 +53,7 @@
 					<label for="region" class="d-block mb-2">Выбрать регион</label>
 					<select id="region" class="vg-select" name="region" data-search="true" data-route="/php/search.php">
 						<option value="1">Московская область</option>
-						<option value="2">Ленинградская область</option>
+						<option value="2" selected>Ленинградская область</option>
 						<option value="3">Калужская область</option>
 						<option value="4">Тульская область</option>
 						<option value="5" hidden="hidden">Краснодарский край</option>
@@ -81,6 +79,8 @@
 				</div>
 				<div class="col-12 mt-3">
 					<button type="submit" class="btn btn-primary">Отправить</button>
+					<button type="reset" class="btn btn-outline-primary">Сбросить</button>
+					<button type="button" class="btn btn-outline-primary" id="add-region">Добавить регион</button>
 				</div>
 			</div>
 		</form>
@@ -93,13 +93,14 @@
 <script src="/demo/js/script.js"></script>
 <script src="/dist/vgselect.min.js"></script>
 <script>
+	let form = document.querySelector('form');
+
 	document.addEventListener('DOMContentLoaded', function () {
 		let elements = document.querySelectorAll('.vg-select');
 		for (const element of elements) {
 			new VGSelect(element, {})
 		}
 
-		let form = document.querySelector('form');
 		form.onsubmit = function () {
 			let data = new FormData(this),
 				monitor = document.getElementById('form-monitor');
@@ -152,6 +153,30 @@
 		let selected = el.options[el.selectedIndex];
 		console.log(selected.dataset.price)
 	});*/
+
+	const region = document.getElementById('region');
+
+	setTimeout(() => {
+		let opt = document.createElement('option');
+		opt.innerText = 'Смоленская область';
+		opt.setAttribute('value', '6');
+
+		region.append(opt)
+	}, 10000)
+
+
+	document.getElementById('add-region').addEventListener('click', function () {
+		let opt = document.createElement('option');
+		opt.innerText = 'Липецкая область';
+		opt.setAttribute('value', '7');
+
+		region.append(opt)
+	});
+
+	/*setTimeout(() => {
+		form.reset();
+		console.log('всё')
+	}, 5000)*/
 </script>
 </body>
 </html>

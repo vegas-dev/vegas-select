@@ -136,6 +136,17 @@ const vg = {
 		}
 
 		return true
+	},
+
+	eventHandler: {
+		on: function (element, event, detail = {}) {
+			const eventSuccess = new CustomEvent(event, {
+				bubbles: true,
+				detail: detail
+			});
+
+			element.dispatchEvent(eventSuccess);
+		}
 	}
 }
 

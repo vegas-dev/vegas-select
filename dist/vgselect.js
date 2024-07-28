@@ -246,8 +246,6 @@
 			if (optGroup.length) {
 				let isSelected = false;
 				[...optGroup].forEach(function (el) {
-					console.log(isSelected);
-
 					let olOptGroup = document.createElement('ol');
 					olOptGroup.classList.add(_this.classes.optgroup);
 
@@ -443,8 +441,11 @@
 
 				let selectList = el.closest('.' + _this.classes.dropdown).querySelector('.' + _this.classes.list);
 				if (selectList) {
-					let options = selectList.querySelectorAll('.' + _this.classes.option),
+					let options = [...selectList.querySelectorAll('.' + _this.classes.option)],
+						optionsGroup = [...selectList.querySelectorAll('.' + _this.classes.optgroup)],
 						value = el.value;
+
+					options = options.concat(optionsGroup);
 
 					for (const option of options) {
 						vg.show(option);

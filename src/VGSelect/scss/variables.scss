@@ -39,12 +39,30 @@ $select-list-map: (
 	border-bottom-color: #f5f5f5,
 ) !default;
 
+$select-optgroup-map: (
+	background-color: transparent,
+	color: #fff,
+	padding-left: 8px,
+	padding-right: 8px,
+	padding-top: 8px,
+	padding-bottom: 8px,
+	border-bottom-width: 1px,
+	border-bottom-style: solid,
+	border-bottom-color: #838383,
+) !default;
+
 $select-list-max-height: 286px !default;
 $select-list-scrollbar-width: 6px !default;
 $select-list-scrollbar-bg: #F5F5F5 !default;
 $select-list-scrollbar-thumb: #999 !default;
 
 $select-list-hover-map: (
+	background-color: #f7f7f7,
+	color: black,
+	border-bottom-color: #f5f5f5,
+) !default;
+
+$select-optgroup-hover-map: (
 	background-color: #f7f7f7,
 	color: black,
 	border-bottom-color: #f5f5f5,

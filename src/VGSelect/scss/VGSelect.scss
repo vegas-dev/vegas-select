@@ -17,6 +17,8 @@ select {
 	@include mix-vars('current', $select-current-map);
 	@include mix-vars('dropdown', $select-dropdown-map);
 	@include mix-vars('list', $select-list-map);
+	@include mix-vars('optgroup', $select-optgroup-map);
+	@include mix-vars('optgroup-hover', $select-optgroup-hover-map);
 	@include mix-vars('list-hover', $select-list-hover-map);
 	@include mix-vars('search', $select-search-map);
 	--vg-select-list-max-height: #{$select-list-max-height};
@@ -130,6 +132,22 @@ select {
 		&--optgroup {
 			list-style: none;
 			padding: 0;
+
+			+ .vg-select-list--optgroup {
+				border-top-width: var(--vg-select-optgroup-border-bottom-width);
+				border-top-style: var(--vg-select-optgroup-border-bottom-style);
+				border-top-color: var(--vg-select-optgroup-border-bottom-color);
+			}
+
+			> li {
+				--vg-select-list-padding-left: 16px;
+			}
+
+			&-title {
+				@each $key, $value in $select-optgroup-map {
+					#{$key}: var(--vg-select-optgroup-#{$key})
+				}
+			}
 		}
 	}
 

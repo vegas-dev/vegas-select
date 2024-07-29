@@ -163,6 +163,8 @@
 		return mParams;
 	};
 
+	let observerTimout;
+
 	class VGSelect {
 		constructor(element, arg = {}) {
 			this.classes = {
@@ -200,7 +202,7 @@
 
 			if (element.dataset?.inited === 'true' && !reInit) {
 				return;
-			} else {
+			} else if (reInit) {
 				_this.destroy(element);
 			}
 
@@ -403,16 +405,18 @@
 		refresh(select) {
 			const _this = this;
 
-			let observer = new MutationObserver(mutationRecords => {
-				mutationRecords.forEach(() => {
+			let observer = new MutationObserver(() => {
+				clearTimeout(observerTimout);
+				observerTimout = setTimeout(() => {
 					_this.create(select, true);
-				});
+				}, 100);
 			});
 
 			observer.observe(select, {
+				attributeFilter: ['disabled', 'required', 'style', 'hidden'],
 				childList: true,
 				subtree: true,
-				characterDataOldValue: true
+				characterDataOldValue: true,
 			});
 		}
 

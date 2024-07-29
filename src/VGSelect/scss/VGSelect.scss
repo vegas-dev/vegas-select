@@ -187,4 +187,18 @@ select {
 			--vg-select-current-padding-right: 55px;
 		}
 	}
+
+	&.disabled {
+		&:before {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: 500;
+		}
+
+		> .vg-select-current {
+			opacity: .75;
+		}
+	}
 }

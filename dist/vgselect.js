@@ -219,6 +219,8 @@
 				select.classList.add(_class);
 			}
 
+			if (element.hasAttribute('disabled')) select.classList.add('disabled');
+
 			let elData = vg.getDataAttributes(element);
 			if (!vg.isEmptyObj(elData)) {
 				for (const key of Object.keys(elData)) {
